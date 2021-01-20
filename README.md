@@ -1,6 +1,6 @@
 [![Community Plus header](https://github.com/newrelic/opensource-website/raw/master/src/images/categories/Community_Plus.png)](https://opensource.newrelic.com/oss-category/#community-plus)
 
-[![Gem Version](https://badge.fury.io/rb/newrelic_rpm.svg)](https://badge.fury.io/rb/newrelic_rpm)
+[![newrelic_rpm gem version](https://badge.fury.io/rb/newrelic_rpm.svg)](https://badge.fury.io/rb/newrelic_rpm)
 
 # New Relic Ruby Agent
 
