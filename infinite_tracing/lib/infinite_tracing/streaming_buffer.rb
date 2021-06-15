@@ -96,7 +96,9 @@ module NewRelic::Agent
         loop do
           if segment = @queue.pop(false)
             NewRelic::Agent.increment_metric SPANS_SENT_METRIC
-            yield transform(segment)
+            transformed_segment = transform(segment)
+            NewRelic::Agent.agent.service.audit_logger.log_infinite_tracing transformed_segment
+            yield transformed_segment
 
           else
             raise ClosedQueueError

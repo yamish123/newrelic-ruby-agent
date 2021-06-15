@@ -54,6 +54,18 @@ module NewRelic
         raise
       end
 
+      def log_infinite_tracing(transformed_segment)
+        return unless enabled?
+        setup_logger unless setup?
+        # require 'pry'; binding.pry
+        @log.info("GRPC RECORDED SPAN: #{transformed_segment}")
+      rescue StandardError, SystemStackError, SystemCallError => e
+        ::NewRelic::Agent.logger.warn("Failed writing to audit log", e)
+      rescue Exception => e
+        ::NewRelic::Agent.logger.warn("Failed writing to audit log with exception. Re-raising in case of interrupt.", e)
+        raise
+      end
+
       def allowed_endpoint?(uri)
         @endpoints.any? { |endpoint| uri =~ endpoint }
       end
