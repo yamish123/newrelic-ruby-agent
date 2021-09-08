@@ -190,12 +190,25 @@ module NewRelic
 
       # extracts a stack trace from the exception for debugging purposes
       def extract_stack_trace(exception)
+        begin
+          ::NewRelic::Agent.logger.warn("TESTWARNING - extract_stack_trace /// exception.respond_to?(:backtrace)= #{exception.respond_to?(:backtrace)}")
+          ::NewRelic::Agent.logger.warn("TESTWARNING - extract_stack_trace /// inspect: #{exception.inspect} ")
+          ::NewRelic::Agent.logger.warn("TESTWARNING - extract_stack_trace /// backtrace: #{exception.backtrace} ")
+        rescue => e
+          ::NewRelic::Agent.logger.error(e.inspect)
+        end
+
         actual_exception = if defined?(Rails::VERSION::MAJOR) && Rails::VERSION::MAJOR < 5
                              sense_method(exception, :original_exception) || exception
                            else
                              exception
                            end
-        sense_method(actual_exception, :backtrace) || '<no stack trace>'
+                           
+        sensed = sense_method(actual_exception, :backtrace) 
+        
+        ::NewRelic::Agent.logger.warn("TESTWARNING - extract_stack_trace /// sensed: #{sensed.inspect}")
+        
+        sensed || '<no stack trace>'
       end
 
       def notice_segment_error(segment, exception, options={})
