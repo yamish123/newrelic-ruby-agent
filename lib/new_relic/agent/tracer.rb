@@ -392,9 +392,16 @@ module NewRelic
         #
         # If ever exposed, this requires additional synchronization
         def state_for(thread)
+          # waluigi
           state = thread[:newrelic_tracer_state]
 
-          if state.nil?
+          if state.nil? #|| state.current_transaction.nil?
+            # seems like this if is bad
+            # state WAS nil, before we set it to thread[:newrelic_tracer_state]
+            # now it's a state with nothing in it
+            # should we be creating a new state here even if state.nil? is false sometimes?
+            # in pry, i tried setting state = nil before this if when we were in the new thread, and it DID create a transaction
+            # perhaps we need to be checking if something inside of state is nil, rather than the whole state object .nil?
             state = Tracer::State.new
             thread[:newrelic_tracer_state] = state
           end
