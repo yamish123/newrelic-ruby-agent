@@ -29,6 +29,7 @@ module NewRelic
           return unless state.is_execution_traced?
 
           if exception = exception_object(payload)
+            # Add options hash
             NewRelic::Agent.notice_error exception
           end
 

@@ -40,11 +40,13 @@ module NewRelic
             if error_key = error_key_present?(event)
               # taking the last error as there can potentially be many
               attributes = event.reply[error_key][-1]
+              # Add options hash
               segment.notice_error Mongo::Error.new("%s (%s)" % [attributes["errmsg"], attributes["code"]])
 
             # failing commands return a CommandFailed event with an error message
             # in the form of "% (%s)" for the message and code
             elsif event.is_a? Mongo::Monitoring::Event::CommandFailed
+              # Add options hash
               segment.notice_error Mongo::Error.new(event.message)
             end
             segment.finish

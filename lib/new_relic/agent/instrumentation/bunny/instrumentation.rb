@@ -94,6 +94,7 @@ module NewRelic
               NewRelic::Agent.logger.error "Error starting message broker segment in Bunny::Queue#pop", e
             else
               if bunny_error
+                # Add options hash
                 segment.notice_error bunny_error
                 raise bunny_error
               end

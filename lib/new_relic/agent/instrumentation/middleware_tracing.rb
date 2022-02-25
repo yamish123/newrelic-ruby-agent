@@ -106,6 +106,7 @@ module NewRelic
 
             result
           rescue Exception => e
+            # Add options 
             NewRelic::Agent.notice_error(e)
             raise e
           ensure

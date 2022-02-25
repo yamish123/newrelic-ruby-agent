@@ -168,6 +168,7 @@ module NewRelic
               begin
                 if segment
                   noticible_error = NewRelic::Agent::NoticibleError.new error[0].name, error[-1]
+                  # Add options hash
                   segment.notice_error noticible_error
                 end
               ensure

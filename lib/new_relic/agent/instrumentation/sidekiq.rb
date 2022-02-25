@@ -94,6 +94,7 @@ DependencyDetection.defer do
 
       if config.respond_to?(:error_handlers)
         config.error_handlers << Proc.new do |error, *_|
+          # Add options hash
           NewRelic::Agent.notice_error(error)
         end
       end

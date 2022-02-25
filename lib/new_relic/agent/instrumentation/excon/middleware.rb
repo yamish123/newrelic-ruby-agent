@@ -49,6 +49,7 @@ module ::Excon
         segment = datum[:connection] && datum[:connection].instance_variable_get(TRACE_DATA_IVAR)
         if segment
           begin
+            # Add options hash
             segment.notice_error(datum[:error]) if datum[:error]
             datum[:connection].instance_variable_set(TRACE_DATA_IVAR, nil)
 

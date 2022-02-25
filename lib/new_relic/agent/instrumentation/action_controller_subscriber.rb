@@ -35,6 +35,7 @@ module NewRelic
               && !should_ignore(payload, controller_class(payload))
 
             if exception = exception_object(payload)
+              # Add options hash 
               finishable.notice_error(exception)
             end
 

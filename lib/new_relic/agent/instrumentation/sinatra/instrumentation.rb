@@ -102,6 +102,7 @@ module NewRelic::Agent::Instrumentation
             # Will only see an error raised if :show_exceptions is true, but
             # will always see them in the env hash if they occur
             had_error = env.has_key?('sinatra.error')
+            # Add options hash 
             ::NewRelic::Agent.notice_error(env['sinatra.error']) if had_error
           end
         end

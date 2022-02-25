@@ -25,6 +25,7 @@ module NewRelic
         def finish(name, id, payload)
           if segment = pop_segment(id)
             if exception = exception_object(payload)
+              # Add options hash
               segment.notice_error exception
             end
             segment.finish
@@ -102,6 +103,7 @@ module NewRelic
         end
 
         def notice_error error
+          # Add options hash
           @finishable.notice_error error if @finishable
         end
       end

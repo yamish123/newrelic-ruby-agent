@@ -27,6 +27,7 @@ module NewRelic
             begin
               yield
             rescue => error
+              # Add options hash
               NewRelic::Agent.notice_error(error)
               raise
             end

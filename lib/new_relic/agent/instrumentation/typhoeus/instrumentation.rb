@@ -65,6 +65,7 @@ module NewRelic
             segment.process_response_headers wrapped_response
 
             if request.response.code == 0
+              # Add options hash
               segment.notice_error NoticibleError.new NOTICIBLE_ERROR_CLASS, response_message(request.response)
             end
 

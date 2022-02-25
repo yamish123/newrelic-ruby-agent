@@ -223,6 +223,7 @@ module NewRelic
       def notice_error(exception, options = {}, span_id = nil)
         state = ::NewRelic::Agent::Tracer.state
         transaction = state.current_transaction
+        # Create an option to get the status_code not only from the transaction
         status_code = transaction ? transaction.http_response_code : nil
 
         return if skip_notice_error?(exception, status_code)
