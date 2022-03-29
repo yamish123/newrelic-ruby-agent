@@ -7,7 +7,8 @@ module NewRelic
     module Instrumentation
       module Logger
         def skip_instrumenting?
-          defined?(@skip_instrumenting) && @skip_instrumenting
+          ::NewRelic::Agent.agent.log_event_aggregator.register_logger(self) unless defined?(@newrelic_registered)
+          @skip_instrumenting if defined?(@skip_instrumenting)
         end
 
         # We support setting this on loggers which might not have

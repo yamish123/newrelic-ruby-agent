@@ -44,6 +44,7 @@ module NewRelic
         @seen_by_severity = Hash.new(0)
         @high_security = NewRelic::Agent.config[:high_security]
         @instrumentation_logger_enabled = NewRelic::Agent::Instrumentation::Logger.enabled?
+        @loggers = {}
         register_for_done_configuring(events)
       end
 
@@ -155,6 +156,15 @@ module NewRelic
         @enabled && @instrumentation_logger_enabled
       end
 
+      def register_logger(logger)
+        logger.instance_variable_set(:@newrelic_registered, true)
+        logdev = logger.instance_variable_get(:@logdev)
+        dev = logdev.instance_variable_get(:@dev) if logdev
+        @loggers[logger] = dev
+
+        mark_standard_streams_for_skipping
+      end
+
       private
 
       # We record once-per-connect metrics for enabled/disabled state at the
@@ -227,6 +237,21 @@ module NewRelic
       def truncate_message(message)
         return message if message.bytesize <= MAX_BYTES
         message.byteslice(0...MAX_BYTES)
+      end
+
+      def non_standard_stream_logger_present?
+        @loggers.values.detect { |dev| dev && dev.class != IO }
+      end
+
+      # don't forward logs from a logger writing to a standard stream
+      # (stdout/stderr) unless standard stream loggers happens to be the
+      # only loggers in use
+      def mark_standard_streams_for_skipping
+        return unless non_standard_stream_logger_present?
+
+        @loggers.each do |logger, dev|
+          logger.mark_skip_instrumenting if dev.class == IO
+        end
       end
     end
   end
