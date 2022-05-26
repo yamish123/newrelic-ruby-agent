@@ -405,17 +405,31 @@ module NewRelic
 
         alias_method :tl_clear, :clear_state
 
-        def thread_block_with_current_transaction(*args, &block)
-          current_txn = ::Thread.current[:newrelic_tracer_state].current_transaction if ::Thread.current[:newrelic_tracer_state]
+        def current_thread_transaction
+          ::Thread.current[:newrelic_tracer_state].current_transaction if ::Thread.current[:newrelic_tracer_state]
+        end
+
+        def thread_or_fiber_block_with_current_transaction(*args, segment_name, &block)
           Proc.new do
             begin
-              NewRelic::Agent::Tracer.state.current_transaction = current_txn
-              segment = NewRelic::Agent::Tracer.start_segment(name: "Ruby/Thread/#{::Thread.current.object_id}")
+              NewRelic::Agent::Tracer.state.current_transaction = current_thread_transaction
+              segment = NewRelic::Agent::Tracer.start_segment(name: segment_name)
               block.call(*args) if block.respond_to?(:call)
             ensure
               segment.finish if segment
             end
           end
+        end
+
+        def thread_block_with_current_transaction(*args, &block)
+          segment_name = "Ruby/Thread/#{::Thread.current.object_id}"
+          thread_or_fiber_block_with_current_transaction(*args, segment_name, &block)
+        end
+
+        def fiber_block_with_current_transaction(*args, &block)
+          # TODO: this is the wrong Fiber id - need to get the id of the Fiber instance being traced
+          segment_name = "Ruby/Thread/#{::Thread.current.object_id}/Fiber/#{::Fiber.current.object_id}"
+          thread_or_fiber_block_with_current_transaction(*args, segment_name, &block)
         end
 
         private

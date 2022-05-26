@@ -938,6 +938,13 @@ If `true`, disables agent middleware for Sinatra. This middleware is responsible
           :allowed_from_server => false,
           :description => "Controls auto-instrumentation of the Thread class at start up to automatically add tracing to all Threads created in the application."
         },
+        :'instrumentation.fiber.tracing' => {
+          :default => false,
+          :public => true,
+          :type => Boolean,
+          :allowed_from_server => false,
+          :description => "Controls auto-instrumentation of the Fiber class at start up to automatically add tracing to all Fibers created in the application."
+        },
         :'instrumentation.redis' => {
           :default => instrumentation_value_of(:disable_redis),
           :documentation_default => 'auto',
