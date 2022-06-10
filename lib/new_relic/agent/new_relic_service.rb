@@ -567,7 +567,8 @@ module NewRelic
 
         $fourohninetime ||= Time.now
         if Time.now - $fourohninetime > 90
-          response = RubyTeamMuckingAbout
+          $fourohninetime = Time.now
+          response = RubyTeamMuckingAbout.new
         end
 
         case response
