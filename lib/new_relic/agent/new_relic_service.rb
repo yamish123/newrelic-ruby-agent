@@ -10,6 +10,17 @@ require 'new_relic/agent/new_relic_service/marshaller'
 require 'new_relic/agent/new_relic_service/json_marshaller'
 require 'new_relic/agent/new_relic_service/security_policy_settings'
 
+
+class RubyTeamMuckingAbout
+  def code
+    409
+  end
+
+  def message
+    "We're just mucking about"
+  end
+end
+
 module NewRelic
   module Agent
     class NewRelicService
@@ -554,6 +565,11 @@ module NewRelic
 
         log_response(response)
 
+        $fourohninetime ||= Time.now
+        if Time.now - $fourohninetime > 90
+          response = RubyTeamMuckingAbout
+        end
+
         case response
         when Net::HTTPSuccess,
              Net::HTTPAccepted
@@ -580,7 +596,8 @@ module NewRelic
           record_error_response_supportability_metrics(response.code)
           raise UnrecoverableServerException, "#{response.code}: #{response.message}"
         when Net::HTTPConflict,
-             Net::HTTPUnauthorized
+             Net::HTTPUnauthorized,
+             RubyTeamMuckingAbout
           record_endpoint_attempts_supportability_metrics(endpoint)
           record_error_response_supportability_metrics(response.code)
           raise ForceRestartException, "#{response.code}: #{response.message}"
