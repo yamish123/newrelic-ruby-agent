@@ -566,7 +566,7 @@ module NewRelic
         log_response(response)
 
         $fourohninetime ||= Time.now
-        if Time.now - $fourohninetime > 90
+        if Time.now - $fourohninetime > 5
           $fourohninetime = Time.now
           response = RubyTeamMuckingAbout.new
         end
@@ -599,6 +599,7 @@ module NewRelic
         when Net::HTTPConflict,
              Net::HTTPUnauthorized,
              RubyTeamMuckingAbout
+          ::NewRelic::Agent.logger.debug "HTTP exception caught - forcing a restart! #{response.code}: #{response.message}"
           record_endpoint_attempts_supportability_metrics(endpoint)
           record_error_response_supportability_metrics(response.code)
           raise ForceRestartException, "#{response.code}: #{response.message}"

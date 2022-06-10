@@ -774,7 +774,8 @@ module NewRelic
           # connections after a specific backoff sequence to prevent
           # hammering the server.
           def connect_retry_period
-            NewRelic::CONNECT_RETRY_PERIODS[connect_attempts] || NewRelic::MAX_RETRY_PERIOD
+            # NewRelic::CONNECT_RETRY_PERIODS[connect_attempts] || NewRelic::MAX_RETRY_PERIOD
+            1
           end
 
           def note_connect_failure
