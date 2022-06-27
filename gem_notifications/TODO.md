@@ -1,0 +1,4 @@
+- Create README
+- Write tests
+- Add support for cRuby and jRuby.
+- Include pre-release updates.

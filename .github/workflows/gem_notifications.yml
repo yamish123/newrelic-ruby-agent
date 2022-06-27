@@ -1,0 +1,20 @@
+name: gem notifications
+
+on:
+  schedule:
+    - cron:  '0 9 * * *'
+
+jobs:
+  run_update_script:
+    steps:
+      - name: Check for outdated gems 
+        run: ruby gem_notifications/update_script.rb 
+        env:
+          SLACK_GEM_NOTIFICATIONS_WEBHOOK: ${{ secrets.SLACK_GEM_NOTIFICATIONS_WEBHOOK }}
+
+      - name: Update watched gems
+        uses: test-room-7/action-update-file@v1
+        with:
+            file-path: gem_notifications/watched_gems.json
+            commit-msg: Update watched gems
+            github-token: ${{ secrets.GITHUB_TOKEN }}
