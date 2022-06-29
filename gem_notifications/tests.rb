@@ -2,6 +2,7 @@ require 'minitest/autorun'
 require_relative 'bot'
 require_relative 'update_script'
 require_relative 'helpers'
+require 'json'
 
 class UpdatedGems < Minitest::Test
   # def teardown
@@ -31,15 +32,11 @@ class UpdatedGems < Minitest::Test
     assert File.zero?("testfile.json.json") == false
     File.delete("testfile.json")
   end
-  # valid Gem gets passed to API
-  # bot is called when mismatched gem versions
 
-  # malformed content?
-
-  # rescue for bad files
-
-  # write_gemfile .. updated_gems == JSON.parse the new file
-
-  # what happens with a fake gem that I assigned to a version. What
-  # happens to that version as we call methods?
+  def test_write_gemfile
+    create_gemfile('testfile.json')
+    update_gemfile('writing a file', 'testfile.json')
+    assert JSON.parse(File.read('testfile.json')) == 'writing a file'
+    File.delete("testfile.json")
+  end
 end

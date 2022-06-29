@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'json'
 
 def delete_gemfile(filename)
   File.delete("#{filename}") if File.exist?("#{filename}")

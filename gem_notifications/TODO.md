@@ -1,4 +1,8 @@
 - Create README
 - Write tests
+  - valid Gem gets passed to API
+  - bot is called when mismatched gem versions
+  - what if there is malformed content?
+  - what happens with a fake gem that I assigned to a version. What happens to that version as we call methods?
 - Add support for cRuby and jRuby.
 - Include pre-release updates.
