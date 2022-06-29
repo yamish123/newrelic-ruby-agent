@@ -2,7 +2,7 @@
 require 'json'
 
 def delete_gemfile(filename)
-  File.delete("#{filename}") if File.exist?("#{filename}")
+  File.delete("#{filename}")
 end
 
 def create_gemfile(filename)
