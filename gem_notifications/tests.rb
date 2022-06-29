@@ -27,13 +27,10 @@ class UpdatedGems < Minitest::Test
 
   def test_update_gemfile_not_empty
     create_gemfile('testfile.json')
-    update_gemfile('some content','testfile.json')
+    update_gemfile('some content', 'testfile.json')
     assert File.zero?("testfile.json.json") == false
     File.delete("testfile.json")
   end
-
-  
-
   # valid Gem gets passed to API
   # bot is called when mismatched gem versions
 
