@@ -5,15 +5,21 @@ require_relative 'bot'
 require 'httparty'
 require 'json'
 
-watched_gems = JSON.parse(File.read('gem_notifications/watched_gems.json'))
-updated_gems = JSON.parse(File.read('gem_notifications/watched_gems.json'))
+filename = 'gem_notifications/watched_gems.json'
 
-watched_gems.each do |gem, version|
+if File.zero?("#{filename}") || File.exist?("#{filename}") == false
+  raise 'watched_gems.json cannot be empty'
+end
+
+watched_gems = JSON.parse(File.read(filename))
+updated_gems = JSON.parse(File.read(filename))
+
+watched_gems.each do |gem, current_version|
   gem_info = HTTParty.get("https://rubygems.org/api/v1/versions/#{gem}/latest.json")
   latest_version = gem_info['version']
-  if version != latest_version
+  if current_version != latest_version
     updated_gems[gem] = latest_version
-    send_bot(gem, version, latest_version)
+    send_bot(gem, current_version, latest_version)
   end
-  update_gemfile(updated_gems) if watched_gems != updated_gems
+  update_gemfile(updated_gems, filename) if watched_gems != updated_gems
 end
